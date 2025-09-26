@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Roles</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .box {
+      border: 1px solid #000;
+      padding: 2rem;
+      max-width: 500px;
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background-color: #fff;
+    }
+    .panel {
+      border: 1px solid #000;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .success { background-color: #d5e8d4; border-color: #82b366; }
+    .error { background-color: #f8d7da; border-color: #c9302c; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="box">
+      <h3 class="text-center">Gestión de Roles</h3>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email del usuario</label>
+        <input type="email" class="form-control" id="email" placeholder="usuario@example.com">
+      </div>
+      <div class="mb-3">
+        <label for="rol" class="form-label">Rol a asignar</label>
+        <input type="text" class="form-control" id="rol" placeholder="Ej: Administrador, Cliente, Encargado de despacho">
+      </div>
+      <button class="btn btn-primary w-100" id="btn-ingresar">Ingresar</button>
+    </div>
+
+    <!-- Paneles de confirmación -->
+    <div class="panel success" id="panel-asignacion"><p>Rol asignado y permisos actualizados.</p></div>
+    <div class="panel success" id="panel-cambio"><p>Rol cambiado correctamente y accesos actualizados.</p></div>
+    <div class="panel error" id="panel-error"><p>Rol no válido.</p></div>
+
+  </div>
+
+  <script>
+    // Usuarios iniciales
+    const usuarios = [
+      { email: "maria@example.com", rol: "" },
+      { email: "carlos@example.com", rol: "Cliente" },
+      { email: "sofia@example.com", rol: "" }
+    ];
+
+    const rolesValidos = ["Administrador", "Cliente", "Encargado de despacho"];
+
+    // Elementos
+    const emailInput = document.getElementById("email");
+    const rolInput = document.getElementById("rol");
+    const btnIngresar = document.getElementById("btn-ingresar");
+
+    const panelAsignacion = document.getElementById("panel-asignacion");
+    const panelCambio = document.getElementById("panel-cambio");
+    const panelError = document.getElementById("panel-error");
+
+    function resetPanels() {
+      panelAsignacion.style.display = "none";
+      panelCambio.style.display = "none";
+      panelError.style.display = "none";
+    }
+
+    btnIngresar.addEventListener("click", () => {
+      resetPanels();
+
+      const email = emailInput.value.trim();
+      const rolNuevo = rolInput.value.trim();
+      if (!email || !rolNuevo) return;
+
+      const usuario = usuarios.find(u => u.email === email);
+
+      // Validar rol
+      if (!rolesValidos.includes(rolNuevo)) {
+        panelError.style.display = "block";
+        return;
+      }
+
+      // Usuario existe
+      if (usuario) {
+        if (!usuario.rol) {
+          // Caso: Asignación inicial
+          usuario.rol = rolNuevo;
+          panelAsignacion.style.display = "block";
+        } else if (usuario.rol !== rolNuevo) {
+          // Caso: Cambio de rol
+          usuario.rol = rolNuevo;
+          panelCambio.style.display = "block";
+        } else {
+          // Caso: ya tiene ese rol → mostrar igualmente confirmación de asignación
+          panelAsignacion.style.display = "block";
+        }
+      } else {
+        // Usuario no existe (para simplificar no lo creamos en este flujo)
+        panelError.style.display = "block";
+      }
+
+      emailInput.value = "";
+      rolInput.value = "";
+    });
+  </script>
+</body>
+</html>
