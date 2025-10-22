@@ -39,7 +39,7 @@
       </div>
       <div class="mb-3">
         <label for="rol" class="form-label">Rol a asignar</label>
-        <input type="text" class="form-control" id="rol" placeholder="Ej: Administrador, Cliente, Encargado de despacho">
+        <input type="text" class="form-control" id="rol" placeholder="Ej: Administrador, Empleado, Encargado de despacho">
       </div>
       <button class="btn btn-primary w-100" id="btn-ingresar">Ingresar</button>
     </div>
@@ -48,7 +48,7 @@
     <div class="panel success" id="panel-asignacion"><p>Rol asignado y permisos actualizados.</p></div>
     <div class="panel success" id="panel-cambio"><p>Rol cambiado correctamente y accesos actualizados.</p></div>
     <div class="panel error" id="panel-error"><p>Rol no válido.</p></div>
-    <div class="panel info" id="panel-ya-rol"><p>El usuario ya tiene ese rol.</p></div>
+    <div class="panel info" id="panel-ya-rol"><p></p></div>
 
   </div>
 
@@ -56,11 +56,11 @@
     // Usuarios iniciales
     const usuarios = [
       { email: "maria@example.com", rol: "" },
-      { email: "carlos@example.com", rol: "Cliente" },
+      { email: "carlos@example.com", rol: "Empleado" },
       { email: "sofia@example.com", rol: "" }
     ];
 
-    const rolesValidos = ["Administrador", "Cliente", "Encargado de despacho"];
+    const rolesValidos = ["Administrador", "Empleado", "Encargado de despacho"];
 
     // Elementos
     const emailInput = document.getElementById("email");
@@ -77,6 +77,10 @@
       panelCambio.style.display = "none";
       panelError.style.display = "none";
       panelYaRol.style.display = "none";
+    }
+
+    function nombreDesdeEmail(email) {
+      return email.split("@")[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 
     btnIngresar.addEventListener("click", () => {
@@ -104,7 +108,9 @@
           usuario.rol = rolNuevo;
           panelCambio.style.display = "block";
         } else {
-          // Ya tiene ese rol
+          // Ya tiene ese rol → mostrar mensaje personalizado
+          const nombre = nombreDesdeEmail(usuario.email);
+          panelYaRol.querySelector('p').textContent = `${nombre} ya tiene el rol ${usuario.rol}.`;
           panelYaRol.style.display = "block";
         }
       } else {
@@ -118,3 +124,4 @@
   </script>
 </body>
 </html>
+
