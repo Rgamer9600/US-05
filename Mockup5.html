@@ -25,6 +25,7 @@
     }
     .success { background-color: #d5e8d4; border-color: #82b366; }
     .error { background-color: #f8d7da; border-color: #c9302c; }
+    .info { background-color: #fff3cd; border-color: #ffecb5; }
   </style>
 </head>
 <body>
@@ -47,6 +48,7 @@
     <div class="panel success" id="panel-asignacion"><p>Rol asignado y permisos actualizados.</p></div>
     <div class="panel success" id="panel-cambio"><p>Rol cambiado correctamente y accesos actualizados.</p></div>
     <div class="panel error" id="panel-error"><p>Rol no válido.</p></div>
+    <div class="panel info" id="panel-ya-rol"><p>El usuario ya tiene ese rol.</p></div>
 
   </div>
 
@@ -68,11 +70,13 @@
     const panelAsignacion = document.getElementById("panel-asignacion");
     const panelCambio = document.getElementById("panel-cambio");
     const panelError = document.getElementById("panel-error");
+    const panelYaRol = document.getElementById("panel-ya-rol");
 
     function resetPanels() {
       panelAsignacion.style.display = "none";
       panelCambio.style.display = "none";
       panelError.style.display = "none";
+      panelYaRol.style.display = "none";
     }
 
     btnIngresar.addEventListener("click", () => {
@@ -90,22 +94,21 @@
         return;
       }
 
-      // Usuario existe
       if (usuario) {
         if (!usuario.rol) {
-          // Caso: Asignación inicial
+          // Asignación inicial
           usuario.rol = rolNuevo;
           panelAsignacion.style.display = "block";
         } else if (usuario.rol !== rolNuevo) {
-          // Caso: Cambio de rol
+          // Cambio de rol
           usuario.rol = rolNuevo;
           panelCambio.style.display = "block";
         } else {
-          // Caso: ya tiene ese rol → mostrar igualmente confirmación de asignación
-          panelAsignacion.style.display = "block";
+          // Ya tiene ese rol
+          panelYaRol.style.display = "block";
         }
       } else {
-        // Usuario no existe (para simplificar no lo creamos en este flujo)
+        // Usuario no existe
         panelError.style.display = "block";
       }
 
